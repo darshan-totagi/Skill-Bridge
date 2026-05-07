@@ -197,12 +197,19 @@ export default function Learning() {
                         )}>
                           <Icon className={cn("w-6 h-6", completed ? "text-green-600" : "text-primary group-hover:text-white")} />
                         </div>
-                        <Badge variant="outline" className={cn(
-                          "rounded-full uppercase tracking-widest text-[10px] font-black px-3 py-1",
-                          completed ? "border-green-500/20 text-green-600" : "border-black/10 group-hover:border-white/20 group-hover:text-white"
-                        )}>
-                          {rec.priority}
-                        </Badge>
+                        <div className="flex flex-col items-end gap-2">
+                          {rec.isMatched && !completed && (
+                            <Badge className="bg-primary text-white border-none text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest flex items-center gap-1 shadow-lg shadow-primary/20">
+                              <Zap className="w-2 h-2" /> Skill Match
+                            </Badge>
+                          )}
+                          <Badge variant="outline" className={cn(
+                            "rounded-full uppercase tracking-widest text-[10px] font-black px-3 py-1",
+                            completed ? "border-green-500/20 text-green-600" : "border-black/10 group-hover:border-white/20 group-hover:text-white"
+                          )}>
+                            {rec.priority}
+                          </Badge>
+                        </div>
                       </div>
 
                       <div className="text-[10px] font-black uppercase tracking-widest text-primary mb-2">{rec.skill}</div>

@@ -31,10 +31,26 @@ router.get("/learning/recommendations", async (req, res): Promise<void> => {
     );
   }
 
-  res.json(recommendations.map(r => {
+  // Sort based on user skills and priority
+  const userSkills = await UserSkill.find({ userId });
+  const userSkillNames = new Set(userSkills.map(s => s.skill.toLowerCase()));
+
+  const priorityMap: Record<string, number> = { high: 3, medium: 2, low: 1 };
+
+  const sorted = recommendations.map(r => {
     const obj = r.toObject();
-    return { ...obj, id: obj._id.toString() };
-  }));
+    const isMatched = userSkillNames.has(obj.skill.toLowerCase());
+    return { ...obj, id: obj._id.toString(), isMatched, priorityScore: priorityMap[obj.priority] || 0 };
+  }).sort((a, b) => {
+    // 1. Matched skills first
+    if (a.isMatched && !b.isMatched) return -1;
+    if (!a.isMatched && b.isMatched) return 1;
+    
+    // 2. Then by priority score (high to low)
+    return b.priorityScore - a.priorityScore;
+  });
+
+  res.json(sorted);
 });
 
 // GET /learning/roadmap
