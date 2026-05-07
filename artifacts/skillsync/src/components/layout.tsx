@@ -98,7 +98,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto px-4 space-y-1 custom-scrollbar">
-          <div className="text-[10px] font-black text-white/20 uppercase tracking-[0.25em] px-4 mb-4">Core Systems</div>
+          <div className="text-[10px] font-black text-white/40 uppercase tracking-[0.25em] px-4 mb-4">Core Systems</div>
           {filteredNav.map(item => {
             const active = location === item.href || location.startsWith(item.href + "/");
             const Icon = item.icon;
@@ -111,10 +111,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     "w-full flex items-center gap-4 px-4 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all group relative overflow-hidden",
                     active
                       ? "bg-primary text-white shadow-lg shadow-primary/20"
-                      : "text-white/40 hover:text-white hover:bg-white/5"
+                      : "text-white/80 hover:text-white hover:bg-white/10"
                   )}
                 >
-                  <Icon className={cn("w-4 h-4 transition-transform group-hover:scale-110", active ? "text-white" : "text-white/20 group-hover:text-primary")} />
+                  <Icon className={cn("w-4 h-4 transition-transform group-hover:scale-110", active ? "text-white" : "text-white/50 group-hover:text-primary")} />
                   <span className="flex-1 text-left">{item.label}</span>
                   {item.href === "/college/announcements" && unreadCount > 0 && (
                     <span className="bg-primary text-white text-[10px] rounded-full px-2 py-0.5 font-black">{unreadCount}</span>
@@ -129,8 +129,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {/* Footer Actions */}
         <div className="p-4 space-y-2 mt-auto">
           <Link href="/profile">
-            <button className="w-full flex items-center gap-4 px-4 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest text-white/40 hover:text-white hover:bg-white/5 transition-all group">
-              <User className="w-4 h-4 text-white/20 group-hover:text-primary" />
+            <button className="w-full flex items-center gap-4 px-4 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest text-white/80 hover:text-white hover:bg-white/10 transition-all group">
+              <User className="w-4 h-4 text-white/50 group-hover:text-primary" />
               Profile Settings
             </button>
           </Link>
