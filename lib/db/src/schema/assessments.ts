@@ -14,6 +14,7 @@ const assessmentResultSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   score: { type: Number, required: true, default: 0 },
   passed: { type: Boolean, required: true, default: false },
+  flagged: { type: Boolean, default: false },
   certificate: { type: String },
 }, { timestamps: { createdAt: "completedAt", updatedAt: false } });
 

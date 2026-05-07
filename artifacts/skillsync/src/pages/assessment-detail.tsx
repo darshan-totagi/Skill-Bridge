@@ -26,7 +26,8 @@ export default function AssessmentDetail() {
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [timeLeft, setTimeLeft] = useState(0);
-  const [result, setResult] = useState<{ score: number; passed: boolean; certificate?: string } | null>(null);
+  const [flagged, setFlagged] = useState(false);
+  const [result, setResult] = useState<{ score: number; passed: boolean; flagged?: boolean; certificate?: string } | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval>>();
 
   const { data: assessment, isLoading } = useGetAssessment(id, {
@@ -36,6 +37,24 @@ export default function AssessmentDetail() {
   const submitMutation = useSubmitAssessment();
 
   const assessData = assessment as { id: string; title: string; category: string; type: string; difficulty: string; duration: number; questionCount: number; questions: Question[] } | undefined;
+
+  useEffect(() => {
+    if (started) {
+      const handleVisibilityChange = () => {
+        if (document.visibilityState === "hidden") {
+          setFlagged(true);
+          toast({
+            title: "Security Violation Flagged",
+            description: "Tab switching detected. This incident has been recorded and a certificate will not be issued.",
+            variant: "destructive",
+          });
+        }
+      };
+
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+      return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+    }
+  }, [started]);
 
   useEffect(() => {
     if (started && timeLeft > 0) {
@@ -69,7 +88,7 @@ export default function AssessmentDetail() {
 
   function handleSubmit() {
     clearInterval(timerRef.current);
-    submitMutation.mutate({ id, data: { answers } }, {
+    submitMutation.mutate({ id, data: { answers, flagged } }, {
       onSuccess: (res: any) => {
         setResult(res);
         queryClient.invalidateQueries({ queryKey: getListAssessmentResultsQueryKey({}) });
@@ -121,20 +140,22 @@ export default function AssessmentDetail() {
             <div className="space-y-2">
               <h1 className="text-6xl font-black tracking-tighter leading-none">{result.score}%</h1>
               <p className="text-xl font-black uppercase tracking-widest opacity-80">
-                {result.passed ? "Assessment Passed" : "Keep Improving"}
+                {result.flagged ? "Flagged: Violation Detected" : result.passed ? "Assessment Passed" : "Keep Improving"}
               </p>
             </div>
 
             <p className="text-sm font-medium max-w-md mx-auto opacity-70">
-              {result.passed 
-                ? `Incredible work! You've successfully validated your expertise in ${assessData.title}.` 
-                : `You need a score of 60% or higher to earn your certification. Take some time to review and try again.`}
+              {result.flagged
+                ? "A security violation (tab switching) was detected during your assessment. Your score has been recorded, but no certificate will be issued."
+                : result.passed 
+                  ? `Incredible work! You've successfully validated your expertise in ${assessData.title}.` 
+                  : `You need a score of 60% or higher to earn your certification. Take some time to review and try again.`}
             </p>
           </div>
         </motion.div>
 
         {/* Certificate Section */}
-        {result.passed && (
+        {result.passed && !result.flagged && (
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}

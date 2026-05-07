@@ -70,7 +70,7 @@ router.post("/assessments/:id/submit", async (req, res): Promise<void> => {
   const assessment = await Assessment.findById(id);
   if (!assessment) { res.status(404).json({ error: "Assessment not found" }); return; }
 
-  const { answers } = req.body;
+  const { answers, flagged } = req.body;
   const obj = assessment.toObject();
   const questions = obj.questions as Array<Record<string, any>>;
 
@@ -91,11 +91,12 @@ router.post("/assessments/:id/submit", async (req, res): Promise<void> => {
     userId,
     score,
     passed,
-    certificate: passed ? `CERT-${userId}-${id}-${Date.now()}` : null,
+    flagged: !!flagged,
+    certificate: (passed && !flagged) ? `CERT-${userId}-${id}-${Date.now()}` : null,
   });
 
   // Award XP and Generate Certificate in Profile
-  if (passed) {
+  if (passed && !flagged) {
     await User.findByIdAndUpdate(userId, { $inc: { xp: 50 } });
 
     // Generate certification in user profile
@@ -107,6 +108,9 @@ router.post("/assessments/:id/submit", async (req, res): Promise<void> => {
       credentialId: result.certificate,
       credentialUrl: `/api/assessments/certificate/${result._id}`,
     });
+  } else if (passed && flagged) {
+    // Still award some XP for completion but less, or just record it
+    await User.findByIdAndUpdate(userId, { $inc: { xp: 10 } });
   }
 
   const resultObj = result.toObject();
