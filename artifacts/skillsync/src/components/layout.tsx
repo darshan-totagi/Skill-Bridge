@@ -15,11 +15,11 @@ import { getListNotificationsQueryKey } from "@workspace/api-client-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
+  { href: "/resume", label: "Resume", icon: FileText },
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/jobs", label: "Jobs & Internships", icon: Briefcase },
   { href: "/assessments", label: "Assessments", icon: ClipboardList },
   { href: "/learning", label: "Learning Hub", icon: BookOpen },
-  { href: "/resume", label: "Resume", icon: FileText },
   { href: "/career", label: "Career Track", icon: TrendingUp },
   { href: "/freelance", label: "Freelance", icon: Code2 },
   { href: "/college/forms", label: "College Forms", icon: GraduationCap },
