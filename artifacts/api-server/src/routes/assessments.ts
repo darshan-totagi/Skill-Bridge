@@ -125,4 +125,79 @@ router.get("/assessment-results", async (req, res): Promise<void> => {
   }));
 });
 
+// GET /assessments/certificate/:id
+router.get("/certificate/:id", async (req, res): Promise<void> => {
+  const resultId = req.params.id;
+  const result = await AssessmentResult.findById(resultId).populate("assessmentId").populate("userId");
+  
+  if (!result || !result.passed) {
+    res.status(404).send("Certificate not found");
+    return;
+  }
+
+  const assessment = (result.assessmentId as any);
+  const user = (result.userId as any);
+  const date = result.completedAt.toLocaleDateString("en-US", { 
+    day: "numeric", 
+    month: "long", 
+    year: "numeric" 
+  });
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Certificate of Completion - ${user.name}</title>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+      <style>
+        body { font-family: 'Inter', sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #f5f5f5; }
+        .certificate { width: 800px; height: 600px; background: white; border: 20px solid #3b82f6; padding: 60px; box-sizing: border-box; position: relative; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+        .logo { font-weight: 900; font-size: 24px; color: #000; letter-spacing: -1px; margin-bottom: 40px; }
+        .logo span { color: #3b82f6; }
+        .title { font-size: 14px; font-weight: 700; color: #3b82f6; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 20px; }
+        .header { font-size: 48px; font-weight: 900; color: #000; margin-bottom: 10px; letter-spacing: -2px; }
+        .subtitle { font-size: 18px; color: #666; margin-bottom: 40px; }
+        .user-name { font-size: 36px; font-weight: 700; color: #000; margin-bottom: 10px; border-bottom: 2px solid #eee; display: inline-block; padding: 0 40px 10px; }
+        .description { font-size: 16px; color: #444; line-height: 1.6; max-width: 500px; margin: 0 auto 40px; }
+        .footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 60px; }
+        .signature { text-align: left; }
+        .signature-line { width: 200px; height: 1px; background: #000; margin-bottom: 10px; }
+        .signature-name { font-size: 14px; font-weight: 700; color: #000; }
+        .date { text-align: right; }
+        .date-label { font-size: 12px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .date-value { font-size: 16px; font-weight: 700; color: #000; }
+        .id { position: absolute; bottom: 20px; left: 0; right: 0; font-size: 10px; color: #ccc; font-family: monospace; }
+      </style>
+    </head>
+    <body>
+      <div class="certificate">
+        <div class="logo">SkillSync<span>.ai</span></div>
+        <div class="title">Certificate of Completion</div>
+        <div class="header">Professional Proficiency</div>
+        <div class="subtitle">This is to certify that</div>
+        <div class="user-name">${user.name}</div>
+        <div class="description">
+          has successfully completed the <strong>${assessment.title}</strong> assessment with a score of <strong>${result.score}%</strong>, demonstrating exceptional expertise in the subject matter.
+        </div>
+        <div class="footer">
+          <div class="signature">
+            <div class="signature-line"></div>
+            <div class="signature-name">Certification Board</div>
+            <div style="font-size: 10px; color: #999;">SkillSync.ai Enterprise</div>
+          </div>
+          <div class="date">
+            <div class="date-label">Issued on</div>
+            <div class="date-value">${date}</div>
+          </div>
+        </div>
+        <div class="id">Credential ID: ${result.certificate}</div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  res.setHeader("Content-Type", "text/html");
+  res.send(html);
+});
+
 export default router;

@@ -180,9 +180,11 @@ export default function AssessmentDetail() {
                   View in Profile <ChevronRight className="w-4 h-4" />
                 </Button>
               </Link>
-              <Button variant="outline" className="flex-1 h-14 rounded-2xl border-black/5 font-black uppercase tracking-widest text-[10px] hover:bg-black hover:text-white transition-all">
-                Download PDF
-              </Button>
+              <a href={`/api/assessments/certificate/${(result as any).id}`} target="_blank" className="flex-1">
+                <Button variant="outline" className="w-full h-14 rounded-2xl border-black/5 font-black uppercase tracking-widest text-[10px] hover:bg-black hover:text-white transition-all">
+                  View Certificate
+                </Button>
+              </a>
             </div>
           </motion.div>
         )}
