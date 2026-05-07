@@ -65,7 +65,11 @@ export default function Jobs() {
     ? Object.fromEntries(matches.map((m: { job: { id: string }; matchScore: number }) => [m.job.id, m.matchScore]))
     : {};
 
-  const jobs = (jobsData as { jobs?: Job[] })?.jobs ?? [];
+  const jobs = [...((jobsData as { jobs?: Job[] })?.jobs ?? [])].sort((a, b) => {
+    const scoreA = matchMap[a.id] ?? 0;
+    const scoreB = matchMap[b.id] ?? 0;
+    return scoreB - scoreA;
+  });
 
   return (
     <div className="min-h-screen bg-[#F8F9FB] selection:bg-primary selection:text-white relative">
