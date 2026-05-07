@@ -278,6 +278,34 @@ async function seed() {
       questions: [
         { id: 1, text: "What is the time complexity of searching for an element in a balanced Binary Search Tree?", type: "mcq", options: ["O(1)", "O(n)", "O(log n)", "O(n log n)"], correctAnswer: "O(log n)" },
       ]
+    },
+    {
+      title: "React Professional",
+      category: "Frontend Development",
+      type: "mcq",
+      difficulty: "medium",
+      duration: 40,
+      questions: [
+        { id: 1, text: "What is the purpose of the `useEffect` hook in React?", type: "mcq", options: ["To manage component state", "To perform side effects in functional components", "To optimize component rendering", "To handle user events"], correctAnswer: "To perform side effects in functional components" },
+        { id: 2, text: "Which hook is used to access the current state and a function to update it?", type: "mcq", options: ["useContext", "useReducer", "useState", "useRef"], correctAnswer: "useState" },
+        { id: 3, text: "What is a 'key' prop used for in React lists?", type: "mcq", options: ["To uniquely identify an element in a collection", "To style individual list items", "To handle click events on list items", "To manage the internal state of a list"], correctAnswer: "To uniquely identify an element in a collection" },
+        { id: 4, text: "How can you pass data from a parent component to a child component?", type: "mcq", options: ["Using state", "Using props", "Using context", "Using Redux"], correctAnswer: "Using props" },
+        { id: 5, text: "What is the virtual DOM in React?", type: "mcq", options: ["A direct copy of the real DOM", "A lightweight representation of the real DOM in memory", "A browser extension for debugging React apps", "A new type of database for React applications"], correctAnswer: "A lightweight representation of the real DOM in memory" },
+      ],
+    },
+    {
+      title: "Python Advanced",
+      category: "Programming",
+      type: "mcq",
+      difficulty: "hard",
+      duration: 50,
+      questions: [
+        { id: 1, text: "What is a decorator in Python?", type: "mcq", options: ["A tool for debugging code", "A way to modify the behavior of a function or class", "A built-in data structure", "A type of loop"], correctAnswer: "A way to modify the behavior of a function or class" },
+        { id: 2, text: "How do you handle exceptions in Python?", type: "mcq", options: ["Using if-else statements", "Using try-except blocks", "Using for loops", "Using functions"], correctAnswer: "Using try-except blocks" },
+        { id: 3, text: "What is the difference between a list and a tuple in Python?", type: "mcq", options: ["Lists are immutable, tuples are mutable", "Lists are mutable, tuples are immutable", "Lists can only contain strings, tuples can contain any type", "There is no difference"], correctAnswer: "Lists are mutable, tuples are immutable" },
+        { id: 4, text: "What is a generator in Python?", type: "mcq", options: ["A function that returns a list", "An iterator that yields values one at a time", "A tool for generating random numbers", "A type of class"], correctAnswer: "An iterator that yields values one at a time" },
+        { id: 5, text: "Which keyword is used to create a class in Python?", type: "mcq", options: ["def", "class", "init", "self"], correctAnswer: "class" },
+      ],
     }
   ]);
 
